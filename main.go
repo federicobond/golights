@@ -44,6 +44,7 @@ func main() {
 		effectsSelector,
 		lightsWidget,
 		widget.NewButton("Quit", func() {
+			strip.Stop()
 			app.Quit()
 		}),
 	))
