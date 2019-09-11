@@ -69,14 +69,24 @@ func (r *LightsWidgetRenderer) MinSize() fyne.Size {
 }
 
 func (r *LightsWidgetRenderer) Refresh() {
-	var objs []fyne.CanvasObject
-	for i, color := range r.w.strip.Pixels() {
-		o := canvas.NewCircle(color)
-		o.Resize(fyne.NewSize(10, 10))
-		o.Move(fyne.NewPos(20 + i * 20, 20))
-		objs = append(objs, o)
+	if r.objects == nil {
+		var objs []fyne.CanvasObject
+		for i, color := range r.w.strip.Pixels() {
+			o := canvas.NewCircle(color)
+			o.Resize(fyne.NewSize(10, 10))
+			o.Move(fyne.NewPos(
+				20+(i%splitLength)*20,
+				20+(i/splitLength)*20,
+			))
+			objs = append(objs, o)
+		}
+		r.objects = objs
+	} else {
+		for i, color := range r.w.strip.Pixels() {
+			circle := r.objects[i].(*canvas.Circle)
+			circle.FillColor = color
+		}
 	}
-	r.objects = objs
 	canvas.Refresh(r.w)
 }
 
