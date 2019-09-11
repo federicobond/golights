@@ -2,14 +2,17 @@ package main
 
 import (
 	"image/color"
+	"math"
 
 	"fyne.io/fyne"
-	"fyne.io/fyne/widget"
 	"fyne.io/fyne/canvas"
+	"fyne.io/fyne/widget"
 )
 
+const splitLength = 64
+
 type LightsWidget struct {
-	pos fyne.Position
+	pos   fyne.Position
 	strip *Strip
 }
 
@@ -24,8 +27,19 @@ func (w *LightsWidget) SetStrip(strip *Strip) {
 }
 
 func (w *LightsWidget) Size() fyne.Size {
-	return fyne.NewSize((w.strip.Size() + 1) * 20 + 10, 50)
-	
+	var l int
+	if w.strip.Size() >= splitLength {
+		l = splitLength
+	} else {
+		l = w.strip.Size() % splitLength
+	}
+
+	h := int(math.Ceil(float64((w.strip.Size() / splitLength)))) + 1
+
+	return fyne.NewSize(
+		(l+1)*20+10,
+		(h+1)*20+10,
+	)
 }
 
 func (w *LightsWidget) Resize(size fyne.Size) {
@@ -47,16 +61,17 @@ func (w *LightsWidget) MinSize() fyne.Size {
 func (w *LightsWidget) Visible() bool {
 	return true
 }
-func (w *LightsWidget) Show() {}
-func (w *LightsWidget) Hide() {}
 
+func (w *LightsWidget) Show() {}
+
+func (w *LightsWidget) Hide() {}
 
 func (w *LightsWidget) CreateRenderer() fyne.WidgetRenderer {
 	return &LightsWidgetRenderer{w: w}
 }
 
 type LightsWidgetRenderer struct {
-	w *LightsWidget
+	w       *LightsWidget
 	objects []fyne.CanvasObject
 }
 
@@ -96,7 +111,8 @@ func (r *LightsWidgetRenderer) BackgroundColor() color.Color {
 	return color.Black
 }
 
-func (r *LightsWidgetRenderer) Objects() []fyne.CanvasObject{
+func (r *LightsWidgetRenderer) Objects() []fyne.CanvasObject {
 	return r.objects
 }
+
 func (r *LightsWidgetRenderer) Destroy() {}

@@ -8,7 +8,7 @@ import (
 func main() {
 	app := app.New()
 
-	strip := NewStrip(64)
+	strip := NewStrip(150)
 	// strip.SetEffect(EffectWave)
 	strip.SetEffect(EffectCombined(
 		EffectRandom,
