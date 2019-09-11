@@ -1,10 +1,10 @@
 package main
 
 import (
-	"sync"
+	"image/color"
 	"math"
 	"math/rand"
-	"image/color"
+	"sync"
 	"time"
 
 	"github.com/lucasb-eyer/go-colorful"
@@ -13,17 +13,17 @@ import (
 type Effect func(pixels []color.Color)
 
 type Strip struct {
-	m sync.Mutex
+	m      sync.Mutex
 	pixels []color.Color
 	effect Effect
-	done chan(struct{})
+	done   chan (struct{})
 }
 
 func NewStrip(size uint) *Strip {
 	return &Strip{
 		pixels: make([]color.Color, size),
 		effect: EffectRandom,
-		done: make(chan(struct{})),
+		done:   make(chan (struct{})),
 	}
 }
 
@@ -44,7 +44,7 @@ func (s *Strip) Pixels() []color.Color {
 }
 
 func (s *Strip) Run(callback func()) {
-	go func () {
+	go func() {
 		ticker := time.NewTicker(100 * time.Millisecond)
 		defer ticker.Stop()
 
@@ -80,7 +80,7 @@ func EffectRandom(pixels []color.Color) {
 func EffectRainbow(pixels []color.Color) {
 	t := int(time.Now().UnixNano() / 10000000)
 	for i := 0; i < len(pixels); i++ {
-		hue := ((i * 360 / len(pixels)) + t * 2) % 360
+		hue := ((i * 360 / len(pixels)) + t*2) % 360
 		pixels[i] = colorful.Hsv(float64(hue), 1, 1)
 	}
 }
@@ -88,7 +88,7 @@ func EffectRainbow(pixels []color.Color) {
 func EffectWave(pixels []color.Color) {
 	t := float64(time.Now().UnixNano() / 100000000)
 	for i := 0; i < len(pixels); i++ {
-		l := math.Sin(t * 0.5 + float64(i) / 10.0) / 2.0 + 0.5
+		l := math.Sin(t*0.5+float64(i)/10.0)/2.0 + 0.5
 		pixels[i] = colorful.Hsv(180, 1, l)
 	}
 }
