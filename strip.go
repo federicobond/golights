@@ -96,6 +96,19 @@ func EffectWave(pixels []color.Color) {
 func EffectCombined(effects ...Effect) Effect {
 	return func(pixels []color.Color) {
 		t := int(time.Now().Unix() / 5)
-		effects[t % len(effects)](pixels)
+		effects[t%len(effects)](pixels)
 	}
+}
+
+func GetEffectByName(name string) Effect {
+	effects := make(map[string]Effect)
+	effects["Random"] = EffectRandom
+	effects["Rainbow"] = EffectRainbow
+	effects["Wave"] = EffectWave
+	effects["Combined"] = EffectCombined(
+		EffectRandom,
+		EffectRainbow,
+		EffectWave,
+	)
+	return effects[name]
 }

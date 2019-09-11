@@ -20,8 +20,28 @@ func main() {
 
 	w := app.NewWindow("Golights")
 
+	selectedEffect := "Combined"
+
+	var effectsSelector *widget.Radio
+	effectsSelector = widget.NewRadio([]string{
+		"Random",
+		"Rainbow",
+		"Wave",
+		"Combined",
+	}, func(selected string) {
+		if selected == "" {
+			effectsSelector.SetSelected(selectedEffect)
+			return
+		}
+		selectedEffect = selected
+		strip.SetEffect(GetEffectByName(selected))
+	})
+
+	effectsSelector.SetSelected("Combined")
+
 	w.SetContent(widget.NewVBox(
 		widget.NewLabel("Hello Golights!"),
+		effectsSelector,
 		lightsWidget,
 		widget.NewButton("Quit", func() {
 			app.Quit()
