@@ -93,6 +93,15 @@ func EffectWave(pixels []color.Color) {
 	}
 }
 
+func EffectColoredWave(pixels []color.Color) {
+	t := float64(time.Now().UnixNano() / 100000000)
+	for i := 0; i < len(pixels); i++ {
+		h := ((i * 360 / len(pixels)) + int(t)*2) % 360
+		l := math.Sin(t*0.5+float64(i)/10.0)/2.0 + 0.5
+		pixels[i] = colorful.Hsv(float64(h), 1, l)
+	}
+}
+
 func EffectCombined(effects ...Effect) Effect {
 	return func(pixels []color.Color) {
 		t := int(time.Now().Unix() / 5)
@@ -105,10 +114,12 @@ func GetEffectByName(name string) Effect {
 	effects["Random"] = EffectRandom
 	effects["Rainbow"] = EffectRainbow
 	effects["Wave"] = EffectWave
+	effects["Colored Wave"] = EffectColoredWave
 	effects["Combined"] = EffectCombined(
 		EffectRandom,
 		EffectRainbow,
 		EffectWave,
+		EffectColoredWave,
 	)
 	return effects[name]
 }

@@ -27,6 +27,7 @@ func main() {
 		"Random",
 		"Rainbow",
 		"Wave",
+		"Colored Wave",
 		"Combined",
 	}, func(selected string) {
 		if selected == "" {
