@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-const splitLength = 64
+const splitLength = 32
 
 type LightsWidget struct {
 	pos   fyne.Position
