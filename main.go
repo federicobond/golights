@@ -27,6 +27,7 @@ func main() {
 		"Random",
 		"Rainbow",
 		"Wave",
+		"Blend",
 		"Colored Wave",
 		"Combined",
 	}, func(selected string) {

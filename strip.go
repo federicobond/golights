@@ -109,11 +109,37 @@ func EffectCombined(effects ...Effect) Effect {
 	}
 }
 
+func EffectBlend(pixels []color.Color) {
+	t := float64(time.Now().UnixNano() / 100000000)
+	alpha := math.Sin(t*0.1)/2.0 + 0.5
+
+	p1 := make([]color.Color, len(pixels))
+	EffectRandom(p1)
+	p2 := make([]color.Color, len(pixels))
+	EffectWave(p2)
+
+	for i := 0; i < len(pixels); i++ {
+		pixels[i] = colorBlend(p1[i], p2[i], alpha)
+	}
+}
+
+func colorBlend(c1, c2 color.Color, alpha float64) color.Color {
+	r1, g1, b1, a1 := c1.RGBA()
+	r2, g2, b2, a2 := c2.RGBA()
+	return color.RGBA64{
+		uint16(float64(r1)*alpha + float64(r2)*(1-alpha)),
+		uint16(float64(g1)*alpha + float64(g2)*(1-alpha)),
+		uint16(float64(b1)*alpha + float64(b2)*(1-alpha)),
+		uint16(float64(a1)*alpha + float64(a2)*(1-alpha)),
+	}
+}
+
 func GetEffectByName(name string) Effect {
 	effects := make(map[string]Effect)
 	effects["Random"] = EffectRandom
 	effects["Rainbow"] = EffectRainbow
 	effects["Wave"] = EffectWave
+	effects["Blend"] = EffectBlend
 	effects["Colored Wave"] = EffectColoredWave
 	effects["Combined"] = EffectCombined(
 		EffectRandom,
